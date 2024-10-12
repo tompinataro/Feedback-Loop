@@ -1,23 +1,26 @@
 const { defineConfig } = require("cypress");
-const { resetTestDatabase, executeSqlFile } = require('./cypress/__utils__/db-setup.js')
-const fs = require('fs')
+const {
+  resetTestDatabase,
+  executeSqlFile,
+} = require("./cypress/__utils__/db-setup.js");
+const fs = require("fs");
 
 module.exports = defineConfig({
   e2e: {
     setupNodeEvents(on, config) {
-      on('task', {
+      on("task", {
         log(message) {
           // Makes it so we can use this within tests to get visibility:
           //   cy.task("log", "some thing to log...");
-          console.log(message +'\n\n');
+          console.log(message + "\n\n");
           return null;
         },
-      })
-      on('before:run', async (details) => {
-        await resetTestDatabase()
-        await executeSqlFile('./tests.sql')
-      })
-      on('after:run', async (results) => {
+      });
+      on("before:run", async (details) => {
+        await resetTestDatabase();
+        await executeSqlFile("./tests.sql");
+      });
+      on("after:run", async (results) => {
         // results will look something like this when run via `cypress run`:
         // {
         //   totalDuration: 81,
@@ -47,18 +50,17 @@ module.exports = defineConfig({
           // Deletes the build folder that the test run
           // generates. Only works if we supply a callback
           // function:
-          fs.rmdir('build', {recursive: true}, () => {})
-        
+          fs.rmdir("build", { recursive: true }, () => {});
+
           console.log(
             results.totalPassed,
-            'out of',
+            "out of",
             results.totalTests,
-            'passed'
-          )
+            "passed",
+          );
         }
-      })
+      });
     },
-    baseUrl: 'http://localhost:5002',
-    
-  }
+    baseUrl: "http://localhost:5002",
+  },
 });
